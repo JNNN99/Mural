@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El mural de las dudas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1518081461904-e9e4a5b1b4d1');
+            background-size: cover;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+            color: #007BFF;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .input-section input[type="text"],
+        .input-section textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #007BFF;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .input-section textarea {
+            height: 60px;
+            resize: none;
+        }
+
+        .input-section input[type="file"] {
+            display: none;
+        }
+
+        .input-section .file-upload-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .input-section .file-upload-container label {
+            background-color: #007BFF;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-section button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-section button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .units-container {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 15px;
+            overflow-x: auto;
+        }
+
+        .unit-column {
+            width: 300px;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            vertical-align: top;
+            position: relative;
+            border: 2px solid #007BFF;
+        }
+
+        .unit-column h2 {
+            font-size: 20px;
+            color: #007BFF;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .posts {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .post {
+            background-color: #e9f7ff;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #b3e5fc;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .post p {
+            margin: 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .post img {
+            max-width: 150px;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .post .button-container {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .post .reply-button,
+        .post .reply-image-button,
+        .post .delete-button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s, transform 0.2s;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .post .reply-button {
+            background-color: #28a745;
+        }
+
+        .post .reply-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .post .reply-image-button {
+            background-color: #ffc107;
+        }
+
+        .post .reply-image-button:hover {
+            background-color: #e0a800;
+            transform: scale(1.05);
+        }
+
+        .post .delete-button {
+            background-color: #dc3545;
+        }
+
+        .post .delete-button:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+
+        .reply .delete-reply-button {
+            background-color: #dc3545;
+            margin-top: 5px;
+        }
+
+        .reply .delete-reply-button:hover {
+            background-color: #c82333;
+        }
+
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-modal img {
+            max-width: 80%;
+            height: auto;
+            margin: auto;
+            display: block;
+            border: 5px solid white;
+            border-radius: 10px;
+        }
+
+        .image-modal .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .units-container {
+                flex-direction: column;
+            }
+            .unit-column {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>El mural de las dudas</h1>
+
+    <div class="input-section">
+        <input type="text" id="student-name" placeholder="Tu nombre">
+        <textarea id="new-post" placeholder="Escribe tu duda aquí..."></textarea>
+        <div class="file-upload-container">
+            <label for="image-upload">Adjuntar imagen</label>
+            <input type="file" id="image-upload" accept="image/*">
+        </div>
+        <button onclick="addPost()">Publicar</button>
+    </div>
+
+    <div class="units-container" id="units-container">
+        <!-- Create columns for 8 units -->
+        <div class="unit-column" id="unidad1">
+            <h2>Unidad Didáctica 1</h2>
+            <ul class="posts" id="posts1"></ul>
+        </div>
+        <div class="unit-column" id="unidad2">
+            <h2>Unidad Didáctica 2</h2>
+            <ul class="posts" id="posts2"></ul>
+        </div>
+        <div class="unit-column" id="unidad3">
+            <h2>Unidad Didáctica 3</h2>
+            <ul class="posts" id="posts3"></ul>
+        </div>
+        <div class="unit-column" id="unidad4">
+            <h2>Unidad Didáctica 4</h2>
+            <ul class="posts" id="posts4"></ul>
+        </div>
+        <div class="unit-column" id="unidad5">
+            <h2>Unidad Didáctica 5</h2>
+            <ul class="posts" id="posts5"></ul>
+        </div>
+        <div class="unit-column" id="unidad6">
+            <h2>Unidad Didáctica 6</h2>
+            <ul class="posts" id="posts6"></ul>
+        </div>
+        <div class="unit-column" id="unidad7">
+            <h2>Unidad Didáctica 7</h2>
+            <ul class="posts" id="posts7"></ul>
+        </div>
+        <div class="unit-column" id="unidad8">
+            <h2>Unidad Didáctica 8</h2>
+            <ul class="posts" id="posts8"></ul>
+        </div>
+    </div>
+
+    <button onclick="clearAllPosts()" style="position: fixed; bottom: 20px; right: 20px; background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 16px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+        <i class="fas fa-trash"></i> Borrar Todo
+    </button>
+
+    <div id="image-modal" class="image-modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modal-image" src="">
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        loadPosts();
+    });
+
+    function addPost() {
+        const studentName = document.getElementById("student-name").value.trim();
+        const postText = document.getElementById("new-post").value.trim();
+        const imageUpload = document.getElementById("image-upload").files[0];
+        const unitNumber = prompt("¿En qué unidad didáctica deseas publicar esta duda? (1-8)").trim();
+        const postList = document.getElementById("posts" + unitNumber);
+
+        if (!studentName || (!postText && !imageUpload)) {
+            alert("Por favor, introduce tu nombre y escribe una duda o adjunta una imagen.");
+            return;
+        }
+
+        if (!postList) {
+            alert("Unidad didáctica no válida.");
+            return;
+        }
+
+        const newPost = document.createElement("li");
+        newPost.className = "post";
+
+        const postAuthor = document.createElement("p");
+        postAuthor.innerHTML = `<strong>${studentName}:</strong> ${postText}`;
+        newPost.appendChild(postAuthor);
+
+        const buttonContainer = document.createElement("div");
+        buttonContainer.className = "button-container";
+
+        if (imageUpload) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.onclick = function() {
+                    openModal(img.src);
+                };
+                newPost.appendChild(img);
+            };
+            reader.readAsDataURL(imageUpload);
+        }
+
+        const replyButton = document.createElement("button");
+        replyButton.textContent = "Responder";
+        replyButton.className = "reply-button";
+        replyButton.onclick = function() {
+            addReply(newPost);
+        };
+        replyButton.innerHTML = '<i class="fas fa-reply"></i> Responder';
+        buttonContainer.appendChild(replyButton);
+
+        const replyImageButton = document.createElement("button");
+        replyImageButton.textContent = "Imagen";
+        replyImageButton.className = "reply-image-button";
+        replyImageButton.onclick = function() {
+            addReplyWithImage(newPost);
+        };
+        replyImageButton.innerHTML = '<i class="fas fa-image"></i> Imagen';
+        buttonContainer.appendChild(replyImageButton);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Eliminar";
+        deleteButton.className = "delete-button";
+        deleteButton.onclick = function() {
+            newPost.remove();
+            savePosts();
+        };
+        deleteButton.innerHTML = '<i class="fas fa-trash"></i> Eliminar';
+        buttonContainer.appendChild(deleteButton);
+
+        newPost.appendChild(buttonContainer);
+        postList.appendChild(newPost);
+        savePosts();
+    }
+
+    function addReply(post) {
+        const studentName = prompt("¿Cuál es tu nombre?").trim();
+        const replyText = prompt("Escribe tu respuesta:").trim();
+        const replyContainer = document.createElement("div");
+        replyContainer.className = "reply";
+
+        if (replyText) {
+            const replyTextElement = document.createElement("p");
+            replyTextElement.innerHTML = `<strong>${studentName}:</strong> ${replyText}`;
+            replyContainer.appendChild(replyTextElement);
+        }
+
+        const deleteReplyButton = document.createElement("button");
+        deleteReplyButton.textContent = "Eliminar Respuesta";
+        deleteReplyButton.className = "delete-reply-button";
+        deleteReplyButton.innerHTML = '<i class="fas fa-trash"></i> Eliminar Respuesta';
+        deleteReplyButton.onclick = function() {
+            replyContainer.remove();
+            savePosts();
+        };
+        replyContainer.appendChild(deleteReplyButton);
+
+        post.appendChild(replyContainer);
+        savePosts();
+    }
+
+    function addReplyWithImage(post) {
+        const studentName = prompt("¿Cuál es tu nombre?").trim();
+        const replyContainer = document.createElement("div");
+        replyContainer.className = "reply";
+
+        const replyImageInput = document.createElement("input");
+        replyImageInput.type = "file";
+        replyImageInput.accept = "image/*";
+        replyImageInput.style.display = "block";
+        replyImageInput.onchange = function() {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.onclick = function() {
+                    openModal(img.src);
+                };
+                const replyTextElement = document.createElement("p");
+                replyTextElement.innerHTML = `<strong>${studentName}:</strong>`;
+                replyContainer.appendChild(replyTextElement);
+                replyContainer.appendChild(img);
+
+                const deleteReplyButton = document.createElement("button");
+                deleteReplyButton.textContent = "Eliminar Respuesta";
+                deleteReplyButton.className = "delete-reply-button";
+                deleteReplyButton.innerHTML = '<i class="fas fa-trash"></i> Eliminar Respuesta';
+                deleteReplyButton.onclick = function() {
+                    replyContainer.remove();
+                    savePosts();
+                };
+                replyContainer.appendChild(deleteReplyButton);
+
+                savePosts();
+            };
+            reader.readAsDataURL(replyImageInput.files[0]);
+        };
+        replyImageInput.click();
+        post.appendChild(replyContainer);
+        savePosts();
+    }
+
+    function openModal(src) {
+        const modal = document.getElementById("image-modal");
+        const modalImg = document.getElementById("modal-image");
+        modal.style.display = "flex";
+        modalImg.src = src;
+    }
+
+    function closeModal() {
+        const modal = document.getElementById("image-modal");
+        modal.style.display = "none";
+    }
+
+    function savePosts() {
+        for (let i = 1; i <= 8; i++) {
+            const posts = document.getElementById("posts" + i).innerHTML;
+            localStorage.setItem("posts" + i, posts);
+        }
+    }
+
+    function loadPosts() {
+        for (let i = 1; i <= 8; i++) {
+            const savedPosts = localStorage.getItem("posts" + i);
+            if (savedPosts) {
+                document.getElementById("posts" + i).innerHTML = savedPosts;
+            }
+        }
+    }
+
+    function clearAllPosts() {
+        if (confirm("¿Estás seguro de que deseas borrar todas las dudas y respuestas?")) {
+            for (let i = 1; i <= 8; i++) {
+                document.getElementById("posts" + i).innerHTML = "";
+                localStorage.removeItem("posts" + i);
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
